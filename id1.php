@@ -28,6 +28,7 @@ $result = $conn->query($sql);
 if ($result->num_rows > 0) {
      while($row = $result->fetch_assoc()) {
         $card_name = $row['full_name'];
+        $pronouns = $row['pronouns'];
     }
 } else {
     die("No user found with the provided card number.");
@@ -55,7 +56,7 @@ $client->send($message);
         <link rel="manifest" href="/site.webmanifest">
     </head>
     <body>
-        <h1><?php echo $card_name; ?> - ICE</h1>
+        <h1><?php echo $card_name . " (" . $pronouns . ")"; ?></h1>
         <p>In case of emergancy please contact:</p>
 
 <?php
