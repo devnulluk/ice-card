@@ -18,7 +18,7 @@ $conn = new mysqli($_ENV['mysql_servername'], $_ENV['mysql_username'], $_ENV['my
     }
 
 //lookup the card number
-$card_number = $_GET['id'] ?? '';
+$card_number = $_GET['id'];
 if (empty($card_number)) {
     die("Card number is required.");
 }
@@ -48,7 +48,7 @@ $client->send($message);
 ?>
 <html>
     <head>
-        <title><?php echo $_ENV['card_name']; ?> - ICE</title>
+        <title><?php echo $card_name; ?> - ICE</title>
         <link rel="stylesheet" href="stylesheet.css" type="text/css" charset="utf-8" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
