@@ -28,6 +28,12 @@ $card_number = $_GET['id'];
 if (empty($card_number)) {
     die("Card number is required.");
 }
+// get flag to set ntfy off
+if (isset($_GET['ntfy'])) {
+  $ntfy = $_GET['ntfy'];}
+else {
+    $ntfy = "true"; // default to true if not set
+}
 
 $sql = "SELECT * FROM users WHERE id = " . $card_number . ";";
 $result = $conn->query($sql);
@@ -40,17 +46,22 @@ if ($result->num_rows > 0) {
     die("No user found with the provided card number.");
 }
 
-//send notification to ntfy server
-
-$message = new Message();
-$message->topic($_ENV['ntfy_topic']);
-$message->title($card_name . " Card Scanned");
-$message->body('An ICE card has been scanned successfully.');
-$message->priority(Message::PRIORITY_MAX);
-
-$client = new Client($server);
-$client->send($message);
-
+// If ntfy is set to true, send a notification
+if ($ntfy !== "false") {
+  //send notification to ntfy server
+  $url = $_ENV['web_root'] . "id1.php?id=" . $card_number . "&ntfy=false";
+  $message = new Message();
+  $message->topic($_ENV['ntfy_topic']);
+  $message->title($card_name . " Card Scanned");
+  $message->body('An ICE card has been scanned successfully.');
+  $message->priority(Message::PRIORITY_MAX);
+  $action = new Ntfy\Action\View();
+  $action->label('View Card');
+  $action->url($url);
+  $message->action($action);
+  $client = new Client($server);
+  $client->send($message);
+}
 ?>
 <html>
     <head>
