@@ -1,4 +1,10 @@
 <?php
+// Date in the past
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+header("Cache-Control: no-cache");
+header("Pragma: no-cache");
+header("CDN-Cache-Control: no-store");
+
 require __DIR__ . '/vendor/autoload.php';
 //load .env file
 use Dotenv\Dotenv;$dotenv = Dotenv::createImmutable(__DIR__);
@@ -75,5 +81,77 @@ if ($result->num_rows > 0) {
 $conn->close(); 
 ?>
 
+
+<!-- Modal requesting location-->
+<div id="myModal" class="modal">
+
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Please tap OK to share your location with emergency contact</p>
+    <button class="button okButton">OK</button><button class="button cancelButton">Cancel</button>
+  </div>
+</div>
+
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var closeX = document.getElementsByClassName("close")[0];
+var closeCancel = document.getElementsByClassName("button cancelButton")[0];
+
+// Get the button that confirms sharing location
+var okButton = document.getElementsByClassName("button okButton")[0];
+
+// When the user clicks on <span> (x), close the modal
+closeX.onclick = function() {
+  modal.style.display = "none";
+}
+
+closeCancel.onclick = function() {
+  modal.style.display = "none";
+}
+
+okButton.onclick = function() {
+  modal.style.display = "none";
+  // Here you can add the code to share the location
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var lat = position.coords.latitude;
+      var lon = position.coords.longitude;
+      // You can send this data to your server or use it as needed
+      console.log("Latitude: " + lat + ", Longitude: " + lon);
+       if (window.XMLHttpRequest){
+            xmlhttp = new XMLHttpRequest();
+        }
+        else{
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        var PageToSendTo = "location.php?";
+        var UrlToSend = PageToSendTo + "lat=" + lat + "&lon=" + lon;
+        xmlhttp.open("GET", UrlToSend, false);
+        xmlhttp.send();
+    }, function(error) {
+      console.error("Error obtaining location: " + error.message);
+    });
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}   
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+   modal.style.display = "block";
+}, false);
+</script>
     </body>
 </html>
