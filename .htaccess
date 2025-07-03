@@ -1,0 +1,8 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Check if the request is a single number and not an actual file or directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([0-9]+)$ id1.php?id=$1 [L,QSA]
+</IfModule>
