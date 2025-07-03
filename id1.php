@@ -140,7 +140,7 @@ okButton.onclick = function() {
             xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
         var PageToSendTo = "location.php?";
-        var UrlToSend = PageToSendTo + "lat=" + lat + "&lon=" + lon;
+        var UrlToSend = PageToSendTo + "id=" + $card_number + "&lat=" + lat + "&lon=" + lon;
         xmlhttp.open("GET", UrlToSend, false);
         xmlhttp.send();
     }, function(error) {
