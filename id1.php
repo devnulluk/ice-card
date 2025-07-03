@@ -75,10 +75,19 @@ if ($result->num_rows > 0) {
         echo "<p>" . $row['full_name'] . " <a href=\"tel:" . $row['tel'] . "\">" . $row['tel'] . "</a></p>";
     }
 } else {
-    die("No ICE users found for the provided card number.");
+    echo("No ICE users found for the provided card number.");
 }
-//close the database connection
-$conn->close(); 
+
+$sql = "select medication from medication where user = " . $card_number . " order by medication;";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+  echo "<h2>Medication</h2>";
+     while($row = $result->fetch_assoc()) {
+        echo "<p>" . $row['medication'] . "</p>";
+    }
+} else {
+    
+}
 ?>
 
 
@@ -155,3 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
     </body>
 </html>
+<?php
+// Close the database connection
+$conn->close(); 
+?>
