@@ -1,0 +1,5 @@
+{
+    "require": {
+        "verifiedjoseph/ntfy-php-library": "^4.7"
+    }
+}
