@@ -75,15 +75,34 @@ if ($ntfy !== "false") {
     </head>
     <body>
         <h1><?php echo $card_name . " (" . $pronouns . ")"; ?></h1>
-        <p>In case of emergancy please contact:</p>
-
 <?php
+// List Non-visibale conditions
+$sql = "SELECT 
+    conditions.id, conditions.condition
+FROM
+    user_conditions
+        JOIN
+    conditions ON user_conditions.condition = conditions.id
+WHERE
+    user_conditions.user = " . $card_number . "
+ORDER BY conditions.condition;";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    echo "<h2>Non-visible conditions</h2>";
+     while($row = $result->fetch_assoc()) {
+        echo $row['condition'] . ", ";
+    }
+} else {
+    
+}
+
 // List ICE Contacts
 $sql = "select full_name, tel from users
 join ice_contacts on ice_contacts.ice_user = users.id
 where ice_contacts.card_user = " . $card_number . " order by ice_contacts.priority;";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
+    echo "<h2>In Case of Emergency Contacts</h2>";
      while($row = $result->fetch_assoc()) {
         echo "<p>" . $row['full_name'] . " <a href=\"tel:" . $row['tel'] . "\">" . $row['tel'] . "</a></p>";
     }
@@ -103,6 +122,7 @@ WHERE
 ORDER BY user_icons.order;";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
+  echo "<h2>Accessibility Needs</h2>";
      while($row = $result->fetch_assoc()) {
         echo "<p><img src=\"accessibility_icons\\" . $row['id'] . ".png\" width=24 height=24><b>" . $row['title'] . "</b><br>" . $row['description'] . "</p>";
     }
