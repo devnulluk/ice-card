@@ -71,6 +71,7 @@ if ($ntfy !== "false") {
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
         <link rel="manifest" href="/site.webmanifest">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
         <h1><?php echo $card_name . " (" . $pronouns . ")"; ?></h1>
@@ -107,7 +108,7 @@ if ($result->num_rows > 0) {
 
   <div class="modal-content">
     <span class="close">&times;</span>
-    <p>Please tap OK to share your location with emergency contact</p>
+    <h1>Please tap OK to share your location with emergency contact</h1>
     <button class="button okButton">OK</button><button class="button cancelButton">Cancel</button>
   </div>
 </div>
