@@ -88,7 +88,7 @@ WHERE
 ORDER BY conditions.condition;";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
-    echo "<h2>Non-visible conditions</h2>";
+    echo "<h2>Conditions</h2>";
      while($row = $result->fetch_assoc()) {
         echo $row['condition'] . ", ";
     }
