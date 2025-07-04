@@ -78,7 +78,7 @@ if ($ntfy !== "false") {
 <?php
 // List Non-visibale conditions
 $sql = "SELECT 
-    conditions.id, conditions.condition
+    conditions.id, conditions.condition, conditions.url
 FROM
     user_conditions
         JOIN
@@ -90,7 +90,7 @@ $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     echo "<h2>Conditions</h2>";
      while($row = $result->fetch_assoc()) {
-        echo $row['condition'] . ", ";
+        echo "<a href=\"" . $row['url'] . "\">" . $row['condition'] . "</a>, ";
     }
 } else {
     
