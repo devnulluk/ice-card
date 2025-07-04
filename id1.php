@@ -88,10 +88,11 @@ WHERE
 ORDER BY conditions.condition;";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
-    echo "<h2>Conditions</h2>";
+    echo "<h2>Conditions</h2><h3>";
      while($row = $result->fetch_assoc()) {
         echo "<a href=\"" . $row['url'] . "\">" . $row['condition'] . "</a>, ";
     }
+    echo "</h3>";
 } else {
     
 }
@@ -124,7 +125,7 @@ $result = $conn->query($sql);
 if ($result->num_rows > 0) {
   echo "<h2>Accessibility Needs</h2>";
      while($row = $result->fetch_assoc()) {
-        echo "<p><img src=\"accessibility_icons\\" . $row['id'] . ".png\" width=24 height=24><b>" . $row['title'] . "</b><br>" . $row['description'] . "</p>";
+        echo "<p><img src=\"accessibility_icons\\" . $row['id'] . ".png\" width=48 height=48><b> " . $row['title'] . "</b><br>" . $row['description'] . "</p>";
     }
 } else {
     
