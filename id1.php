@@ -78,6 +78,7 @@ if ($ntfy !== "false") {
         <p>In case of emergancy please contact:</p>
 
 <?php
+// List ICE Contacts
 $sql = "select full_name, tel from users
 join ice_contacts on ice_contacts.ice_user = users.id
 where ice_contacts.card_user = " . $card_number . " order by ice_contacts.priority;";
@@ -90,6 +91,26 @@ if ($result->num_rows > 0) {
     echo("No ICE users found for the provided card number.");
 }
 
+// List Icons
+$sql = "SELECT 
+    icons.id, icons.title, icons.description
+FROM
+    user_icons
+        JOIN
+    icons ON user_icons.icon = icons.id
+WHERE
+    user_icons.user = " . $card_number . "
+ORDER BY user_icons.order;";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+     while($row = $result->fetch_assoc()) {
+        echo "<p><img src=\"accessibility_icons\\" . $row['id'] . ".png\" width=24 height=24><b>" . $row['title'] . "</b><br>" . $row['description'] . "</p>";
+    }
+} else {
+    
+}
+
+// List Medication
 $sql = "select medication from medication where user = " . $card_number . " order by medication;";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
