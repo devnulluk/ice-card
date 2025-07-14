@@ -35,16 +35,23 @@ else {
     $ntfy = "true"; // default to true if not set
 }
 
-$sql = "SELECT * FROM users WHERE id = " . $card_number . ";";
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-     while($row = $result->fetch_assoc()) {
-        $card_name = $row['full_name'];
-        $pronouns = $row['pronouns'];
-    }
-} else {
-    die("No user found with the provided card number.");
+$sql = "SELECT full_name, pronouns FROM users WHERE id = ?";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+  die("Prepare failed: " . $conn->error);
 }
+$stmt->bind_param("i", $card_number);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($result->num_rows > 0) {
+  while ($row = $result->fetch_assoc()) {
+    $card_name = $row['full_name'];
+    $pronouns = $row['pronouns'];
+  }
+} else {
+  die("No user found with the provided card number.");
+}
+$stmt->close();
 
 // If ntfy is set to true, send a notification
 if ($ntfy !== "false") {
@@ -77,6 +84,7 @@ if ($ntfy !== "false") {
         <h1><?php echo $card_name . " (" . $pronouns . ")"; ?></h1>
 <?php
 // List Non-visibale conditions
+
 $sql = "SELECT 
     conditions.id, conditions.condition, conditions.url
 FROM
@@ -84,9 +92,15 @@ FROM
         JOIN
     conditions ON user_conditions.condition = conditions.id
 WHERE
-    user_conditions.user = " . $card_number . "
+    user_conditions.user = ?
 ORDER BY conditions.condition;";
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+  die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $card_number);
+$stmt->execute();
+$result = $stmt->get_result();
 if ($result->num_rows > 0) {
     echo "<h2>Conditions</h2><h3>";
      while($row = $result->fetch_assoc()) {
@@ -96,12 +110,20 @@ if ($result->num_rows > 0) {
 } else {
     
 }
+$stmt->close();
 
 // List ICE Contacts
 $sql = "select full_name, tel from users
 join ice_contacts on ice_contacts.ice_user = users.id
-where ice_contacts.card_user = " . $card_number . " order by ice_contacts.priority;";
-$result = $conn->query($sql);
+where ice_contacts.card_user = ? order by ice_contacts.priority;";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+  die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $card_number);
+$stmt->execute();
+$result = $stmt->get_result();
+
 if ($result->num_rows > 0) {
     echo "<h2>In Case of Emergency Contacts</h2>";
      while($row = $result->fetch_assoc()) {
@@ -110,6 +132,7 @@ if ($result->num_rows > 0) {
 } else {
     echo("No ICE users found for the provided card number.");
 }
+$stmt->close();
 
 // List Icons
 $sql = "SELECT 
@@ -119,9 +142,15 @@ FROM
         JOIN
     icons ON user_icons.icon = icons.id
 WHERE
-    user_icons.user = " . $card_number . "
+    user_icons.user = ?
 ORDER BY user_icons.order;";
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+  die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $card_number);
+$stmt->execute();
+$result = $stmt->get_result();
 if ($result->num_rows > 0) {
   echo "<h2>Accessibility Needs</h2>";
      while($row = $result->fetch_assoc()) {
@@ -130,10 +159,18 @@ if ($result->num_rows > 0) {
 } else {
     
 }
+$stmt->close();
 
 // List Medication
-$sql = "select medication from medication where user = " . $card_number . " order by medication;";
-$result = $conn->query($sql);
+$sql = "select medication from medication where user = ? order by medication;";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+  die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $card_number);
+$stmt->execute();
+$result = $stmt->get_result();
+
 if ($result->num_rows > 0) {
   echo "<h2>Medication</h2>";
      while($row = $result->fetch_assoc()) {
@@ -142,6 +179,7 @@ if ($result->num_rows > 0) {
 } else {
     
 }
+$stmt->close();
 ?>
 
 

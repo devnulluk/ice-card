@@ -25,8 +25,14 @@ if (empty($card_number)) {
     
 }
 
-$sql = "SELECT full_name FROM users WHERE id = " . $card_number . ";";
-$result = $conn->query($sql);
+$sql = "SELECT full_name FROM users WHERE id = ?;";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+  die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $card_number);
+$stmt->execute();
+$result = $stmt->get_result();
 if ($result->num_rows > 0) {
      while($row = $result->fetch_assoc()) {
         $card_name = $row['full_name'];
@@ -34,7 +40,7 @@ if ($result->num_rows > 0) {
 } else {
     
 }
-
+$stmt->close();
 
 $server = new Server($_ENV['ntfy_server_url']);
 //send notification to ntfy server
